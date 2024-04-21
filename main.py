@@ -57,17 +57,16 @@ def main():
             for image in image_files:
                 images_to_process.append(image.name)
 
-            print(f'============{images_to_process}')
-
-            #print(get_last_directory_contents('runs/pose'))
             model(
                 source=images_to_process, show=False,
                 conf=0.3, save=True
             )
 
-            for filename in os.listdir('runs/pose/predict50'):
+            
+            directory = get_last_directory_contents('runs/pose')
+            for filename in os.listdir(directory):
                 print(filename)
-                st.image(f'runs/pose/predict50/{filename}', caption='pred score')
+                st.image(f'{directory}/{filename}', caption='pred score')
 
 
 if __name__ == '__main__':
