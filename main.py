@@ -1,5 +1,13 @@
+from cProfile import label
+from tkinter import image_names
 import streamlit as st
 import time
+import os
+
+from ultralytics import YOLO
+from model.calculating_norm import get_last_directory_contents
+model = YOLO('yolov8m-pose.pt')
+
 
 def some_ai_func():
     time.sleep(2)
@@ -10,9 +18,9 @@ def generate_sidebar():
     
     st.sidebar.markdown(
         '# Проект выполнила группа Nuclear: \n'
-        '- Богдан\n'
-        '- Евгений\n'
-        '- Петр\n'
+        '- Богдан Левченко \n'
+        '- Евгений Коровин\n'
+        '- Петр Рыбаков\n'
         '- Мария\n'
     )
     st.sidebar.markdown("____")
@@ -25,32 +33,41 @@ def generate_sidebar():
     )
     st.sidebar.markdown('___')
 
-    st.sidebar.markdown('# Ссылка на Github: [SmokingDetection](ВСТАВИТЬ ССЫЛКУ НА РЕПУ)')  # !!!!!!!!!!!!!!!!!!!!!!!!
+    st.sidebar.markdown('# Ссылка на Github: [nuclear_hackathon](https://github.com/befragment/nuclear_hackathon)')  # !!!!!!!!!!!!!!!!!!!!!!!!
     
 
 def main():
     generate_sidebar()
 
-    st.title("Nuclear Team WebPage :smoking:")   
+    st.title("Nuclear Team WebPage")   
     st.write("____")
 
     image_files = st.file_uploader(
-        label="Drag your image here :sunglasses:",
+        label="Переместите фотографии ниже :sunglasses:",
         type=['jpg', 'png', 'jpeg', 'gif'],
         accept_multiple_files=True,
     )
 
-    button_click = st.button("Вычислить пидораса") # returns bool
+    button_click = st.button("Вычислить") # returns bool
 
+    images_to_process = []
 
     with st.spinner("Нейросеть думает..."):
         if button_click:
-            some_ai_func()
             for image in image_files:
-                st.image(
-                    image=image,
-                    caption=f"model score is {__import__('random').randint(69, 100)}%!!!"
-                )
+                images_to_process.append(image.name)
+
+            print(f'============{images_to_process}')
+
+            #print(get_last_directory_contents('runs/pose'))
+            model(
+                source=images_to_process, show=False,
+                conf=0.3, save=True
+            )
+
+            for filename in os.listdir('runs/pose/predict50'):
+                print(filename)
+                st.image(f'runs/pose/predict50/{filename}', caption='pred score')
 
 
 if __name__ == '__main__':
