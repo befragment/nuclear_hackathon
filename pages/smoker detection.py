@@ -8,13 +8,13 @@ import cv2
 
 def gestures_demo():
     st.set_page_config(
-        page_title="Распознавание жестов",
+        page_title="Распознавание курящих",
         page_icon="🤖",
         layout="wide",
         initial_sidebar_state="expanded"
     )
 
-    st.title("Распознавание жестов")
+    st.title("Распознавание курящих")
     st.sidebar.header("Настройки")
 
     path_to_json_config = 'yolo_config.json'
